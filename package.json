@@ -1,0 +1,33 @@
+{
+  "name": "whatsapp-otp-gateway",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Self-hosted experimental WhatsApp OTP gateway with a real Baileys adapter, dashboard and OpenAPI docs.",
+  "engines": {
+    "node": ">=22.13.0 <23"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env src/server.mjs",
+    "dev": "node --watch --env-file-if-exists=.env src/server.mjs",
+    "test": "node --test test/*.test.mjs",
+    "check": "find src public test e2e scripts -type f -name '*.mjs' -exec node --check {} \\;",
+    "test:browser": "playwright test",
+    "test:docker": "node scripts/docker-smoke.mjs"
+  },
+  "dependencies": {
+    "@fastify/cookie": "^11.0.2",
+    "@fastify/helmet": "^13.0.2",
+    "@fastify/static": "^10.1.10",
+    "@fastify/swagger": "^9.5.1",
+    "@fastify/swagger-ui": "^6.1.3",
+    "@whiskeysockets/baileys": "7.0.0-rc14",
+    "fastify": "^5.12.8",
+    "pino": "^10.4.0",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.0"
+  },
+  "license": "MIT"
+}

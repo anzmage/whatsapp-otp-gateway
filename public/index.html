@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow"><meta name="color-scheme" content="dark">
+  <title>WhatsApp OTP Gateway — ZaidanLab</title>
+  <link rel="icon" href="data:,"><link rel="stylesheet" href="/assets/style.css">
+  <script type="module" src="/assets/app.mjs"></script>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="/" aria-label="OTP Gateway home"><span class="brand-icon">↗</span><span>OTP<span class="muted"> / </span>Gateway<small>BY ZAIDANLAB</small></span></a><div class="header-actions"><span class="badge">SELF-HOSTED · EXPERIMENTAL</span><a id="docs-link" href="/docs/" target="_blank" rel="noopener" hidden>API docs ↗</a><button id="logout" class="quiet" hidden>Sign out</button></div></header>
+  <div id="notice" class="toast" role="status" aria-live="polite" hidden></div>
+  <main>
+    <section id="loading" class="auth-panel"><p>Loading your workspace…</p></section>
+    <section id="auth" class="auth-panel" hidden>
+      <span class="eyebrow">YOUR INFRASTRUCTURE. YOUR NUMBERS.</span><h1 id="auth-title">Welcome back.</h1><p id="auth-description" class="muted">Sign in to manage your sending numbers and OTP integrations.</p>
+      <form id="auth-form">
+        <label>Email<input name="email" type="email" autocomplete="username" maxlength="254" required></label>
+        <label>Password<input name="password" type="password" autocomplete="current-password" minlength="12" maxlength="128" required></label>
+        <label id="setup-label" hidden>Installation setup token<input name="setupToken" type="password" autocomplete="off" minlength="32" maxlength="256"><small>From your server’s SETUP_TOKEN. Only used for initial owner registration.</small></label>
+        <button id="auth-submit" class="primary" type="submit">Sign in →</button>
+      </form>
+      <p class="fine">Uses an unofficial WhatsApp connection. Use a spare number. Availability and delivery are not guaranteed.</p>
+    </section>
+    <div id="workspace" hidden>
+      <div class="workspace-heading"><div><span class="eyebrow">CONTROL PLANE</span><h1>Your verification workspace.</h1><p class="muted">Connect a number. Create a key. Integrate your application.</p></div><a href="#playground" class="button primary">Test your integration ↗</a></div>
+      <aside class="warning"><strong>Real messages. Experimental transport.</strong> Baileys is unofficial and the linked number may be banned. Send only recipient-requested codes. Never rely on this as the only login channel for critical services.</aside>
+      <nav class="section-nav" aria-label="Dashboard sections"><a href="#overview">Overview</a><a href="#numbers">Sending numbers</a><a href="#keys">API keys</a><a href="#activity">Activity</a><a href="#playground">Playground</a><a href="#security">Security</a></nav>
+      <section id="overview" aria-labelledby="overview-title"><h2 id="overview-title" class="sr-only">Overview</h2><div class="stats"><article class="stat"><span>CONNECTED NUMBERS</span><strong id="stat-devices">0</strong><small>Live session status</small></article><article class="stat"><span>REQUESTS</span><strong id="stat-requests">0</strong><small>Most recent 100 · retained 24h</small></article><article class="stat"><span>VERIFIED</span><strong id="stat-verified">0</strong><small>Within the displayed requests</small></article><article class="stat"><span>ACTIVE API KEYS</span><strong id="stat-keys">0</strong><small>Server-to-server access</small></article></div></section>
+      <section id="numbers" class="panel"><div class="section-heading"><div><span class="eyebrow">01 / CONNECT</span><h2>Sending numbers</h2><p class="muted">Add an existing WhatsApp number, then link it using your phone.</p></div></div>
+        <form id="device-form" class="inline-form"><label>Label<input name="label" placeholder="My application" maxlength="60" required></label><label>WhatsApp number<input name="phone" type="tel" aria-label="WhatsApp number" aria-describedby="sender-phone-help" placeholder="+6281234567890" pattern="\+[1-9][0-9]{7,14}" required><small id="sender-phone-help">Country code required. No spaces.</small></label><button type="submit" class="primary">+ Add number</button></form>
+        <div id="device-list" class="device-list"></div>
+        <p class="fine">Pairing codes and QR images are credentials. Do not share them. Adding a number does not register a new WhatsApp account.</p>
+      </section>
+      <section id="keys" class="panel"><div class="section-heading"><div><span class="eyebrow">02 / AUTHORIZE</span><h2>API keys</h2><p class="muted">Keep keys on your application server, never in public frontend code.</p></div><a href="/docs/" target="_blank" rel="noopener">Open Swagger UI ↗</a></div>
+        <form id="key-form" class="inline-form"><label>Application name<input name="name" placeholder="Customer portal" maxlength="60" required></label><button class="primary" type="submit">Create API key</button></form>
+        <div id="key-list" class="stack"></div>
+      </section>
+      <section id="activity" class="panel"><div class="section-heading"><div><span class="eyebrow">03 / OBSERVE</span><h2>Recent activity</h2><p class="muted">OTP values are never listed. “Accepted” means a message ID was returned, not confirmed delivery.</p></div><button id="refresh" class="quiet">Refresh</button></div>
+        <div class="table-wrap"><table><thead><tr><th>Request</th><th>Recipient</th><th>OTP state</th><th>Delivery</th><th>Expires</th></tr></thead><tbody id="activity-list"></tbody></table></div>
+      </section>
+      <section id="playground" class="panel"><div class="section-heading"><div><span class="eyebrow">04 / INTEGRATE</span><h2>API playground</h2><p class="muted">An operator-only integration test. Requests below use the real API and send real messages.</p></div></div>
+        <div class="two-col"><div><form id="request-form"><label>API key<input id="playground-key" name="key" type="password" autocomplete="off" placeholder="wotp_…" required></label><label>Sending number<select id="playground-device" name="deviceId" required><option value="">Select a connected number</option></select></label><label>Recipient<input name="phone" type="tel" placeholder="+6281234567890" pattern="\+[1-9][0-9]{7,14}" required></label><label class="check"><input name="consent" type="checkbox" required><span>The recipient requested this code. I understand this sends a real WhatsApp message.</span></label><button class="primary" type="submit">Send real OTP →</button></form></div>
+        <div><form id="verify-form"><label>Request ID<input id="verify-id" name="requestId" placeholder="Returned by request OTP" required></label><label>Received OTP<input name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" minlength="6" maxlength="6" placeholder="6 digits" required></label><div class="actions"><button type="submit" class="primary">Verify code</button><button type="button" id="request-status" class="quiet">Check status</button></div></form><pre id="api-result" aria-live="polite">Responses will appear here. No API keys or OTP values are saved in browser storage.</pre></div></div>
+        <details><summary>Server-side integration example</summary><pre id="curl-example"></pre><p class="fine">Bind requestId to your application’s user/session and intended action. Never trust a request ID chosen by the client to authenticate another account. Reuse an Idempotency-Key on network timeout; do not blindly resend an uncertain delivery.</p></details>
+      </section>
+      <section id="security" class="panel"><div class="section-heading"><div><span class="eyebrow">INSTALLATION</span><h2>Security &amp; limits</h2><p class="muted">Limits are configured by the host environment, not by callers.</p></div></div><dl id="settings-list" class="settings"></dl>
+        <details><summary>Change owner password</summary><form id="password-form" class="narrow"><label>Current password<input name="currentPassword" type="password" autocomplete="current-password" maxlength="128" required></label><label>New password<input name="newPassword" type="password" autocomplete="new-password" minlength="12" maxlength="128" required></label><button type="submit" class="quiet">Change password &amp; sign out all sessions</button></form></details>
+      </section>
+    </div>
+  </main>
+  <footer><span>ZaidanLab / WhatsApp OTP Gateway</span><span>Self-hosted · Single owner · Not affiliated with WhatsApp or Meta</span></footer>
+  <dialog id="secret-dialog"><form method="dialog"><h2>Save your API key</h2><p>This key will only be shown once. Store it in your server’s secret manager.</p><label>API key<input id="new-key" type="text" readonly autocomplete="off"></label><div class="actions"><button id="copy-key" type="button" class="primary">Copy key</button><button value="close" class="quiet">I’ve saved it</button></div></form></dialog>
+</body>
+</html>

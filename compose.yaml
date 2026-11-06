@@ -1,0 +1,30 @@
+services:
+  gateway:
+    build: .
+    init: true
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      HOST: 0.0.0.0
+      PORT: 3000
+      DATA_DIR: /app/.data
+    # Deliberately loopback-only. Put an HTTPS reverse proxy in front for remote use.
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - gateway-data:/app/.data
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 40s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+volumes:
+  gateway-data:

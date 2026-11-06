@@ -1,0 +1,15 @@
+.git
+.env
+.env.*
+.data
+auth
+sessions
+node_modules
+test
+e2e
+test-results
+playwright-report
+coverage
+*.log
+*.sqlite*
+*.db*

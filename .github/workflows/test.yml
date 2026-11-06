@@ -1,0 +1,26 @@
+name: Test
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.22.0'
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm test
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser
+      - run: npm audit --omit=dev
+      - run: docker build -t whatsapp-otp-gateway:ci .
+      - run: npm run test:docker
+        env:
+          OTP_DOCKER_IMAGE: whatsapp-otp-gateway:ci
