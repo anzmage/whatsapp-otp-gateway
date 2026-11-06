@@ -116,7 +116,7 @@ Reuse the **same** `Idempotency-Key` with the same body after an HTTP/network ti
 
 ## Deployment & data
 
-See [docs/OPERATIONS.md](docs/OPERATIONS.md) and [docs/SECURITY.md](docs/SECURITY.md).
+See [docs/OPERATIONS.md](docs/OPERATIONS.md) and [docs/SECURITY.md](docs/SECURITY.md). A [native systemd deployment template](deploy/systemd/README.md) is also available for shared Linux servers, with a dedicated user/runtime, resource caps and SSH-tunnel-only initial access; Docker is optional. Provider risks are documented here rather than repeated as dashboard banners.
 
 - One owner, **one process/replica**, one SQLite store and one writer per WhatsApp number. Multi-tenant SaaS, billing, HA and distributed queues are not implemented.
 - Compose binds only `127.0.0.1:3000`. For remote access put an HTTPS reverse proxy in front and set `PUBLIC_URL=https://your-host.example`. No subpath hosting.

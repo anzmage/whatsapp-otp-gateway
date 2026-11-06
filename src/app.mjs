@@ -71,7 +71,7 @@ export async function createApp({ config, store = openStore(config.dataDir), ada
       openapi: '3.1.0',
       info: {
         title: 'WhatsApp OTP Gateway', version: '0.1.0',
-        description: 'Experimental self-hosted gateway. Try it out performs REAL operations and can send WhatsApp messages. Use only recipient-requested codes. Baileys is unofficial; sessions may disconnect and numbers may be banned. Never use as the only authentication channel for critical services. Delivery is not guaranteed. API keys belong on your application server, never in browser/mobile bundles. Request metadata/idempotency is retained for 24 hours; reuse an Idempotency-Key within that period to avoid duplicate sends. Unknown acknowledgements are never automatically retried.',
+        description: 'Self-hosted WhatsApp OTP gateway. Try it out performs REAL operations and can send WhatsApp messages. Use only recipient-requested codes. API keys belong on your application server, never in browser/mobile bundles. Request metadata/idempotency is retained for 24 hours; reuse an Idempotency-Key within that period to avoid duplicate sends. Send acknowledgement is distinct from delivery. Unknown acknowledgements are never automatically retried. See the project README for deployment considerations and provider risks.',
       },
       servers: [{ url: config.origin }],
       tags: [{ name: 'OTP', description: 'Request, inspect and verify real one-time codes.' }, { name: 'Devices', description: 'Connected sending numbers configured by the owner.' }],

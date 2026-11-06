@@ -8,7 +8,7 @@ try {
   app = await createApp({ config });
   await app.listen({ port: config.port, host: config.host });
   await app.whatsapp.restore();
-  app.log.info({ dashboard: config.origin }, 'Experimental OTP gateway ready. Pair a spare number in the dashboard.');
+  app.log.info({ dashboard: config.origin }, 'WhatsApp OTP gateway ready. Manage sending numbers in the dashboard.');
 } catch (err) {
   console.error('Startup failed:', err.code || (app ? 'INTERNAL_ERROR' : err.message));
   if (app) await app.close();
